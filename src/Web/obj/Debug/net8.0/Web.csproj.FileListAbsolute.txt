@@ -1,0 +1,8 @@
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.csproj.AssemblyReference.cache
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.GeneratedMSBuildEditorConfig.editorconfig
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.AssemblyInfoInputs.cache
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.AssemblyInfo.cs
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.csproj.CoreCompileInputs.cache
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.MvcApplicationPartsAssemblyInfo.cs
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.MvcApplicationPartsAssemblyInfo.cache
+D:\enredes\backend\src\Web\obj\Debug\net8.0\Web.sourcelink.json
