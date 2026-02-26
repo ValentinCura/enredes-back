@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Application.Interfaces; // Asegurate de que el namespace de la base sea correcto
+using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IUserRepository : IBaseRepository<User>
 {
-    internal interface IUserRepository
-    {
-    }
+    // Aquí agregamos comportamientos que NO son genéricos
+    // Por ejemplo, buscar por email para el Login o verificar si un número de cliente existe
+    Task<User?> GetByEmailAsync(string email);
+    Task<User?> GetByClientNumberAsync(string clientNumber);
+    Task<bool> ExistsByEmailAsync(string email);
 }

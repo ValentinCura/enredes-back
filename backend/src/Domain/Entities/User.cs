@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,28 +12,28 @@ namespace Domain.Entities
         // Id [int] IDENTITY(1,1)
         public int Id { get; set; }
 
-        // [ClientNumber] [nvarchar](50) - Unique
+        [Required]
         public string ClientNumber { get; set; } = string.Empty;
 
-        // [Firstname] [nvarchar](50)
+        [Required]
         public string Firstname { get; set; } = string.Empty;
 
-        // [Lastname] [nvarchar](50)
+        [Required]
         public string Lastname { get; set; } = string.Empty;
 
-        // [Email] [nvarchar](255) - Unique
+        [Required]
         public string Email { get; set; } = string.Empty;
 
-        // [Phonenumber] [varchar](20)
+        [Required]
         public string Phonenumber { get; set; } = string.Empty;
 
-        // [Password] [varchar](255)
+        [Required]
         public string Password { get; set; } = string.Empty;
 
-        // [Type] [varchar](20) - Default 'Client' (Check: Client o Admin)
+        [Required]
         public string Type { get; set; } = "Client";
 
-        // [CreatedAt] [datetime] - Default getdate()
+        [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
