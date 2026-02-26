@@ -1,10 +1,6 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace Infrastructure
 {
@@ -14,10 +10,25 @@ namespace Infrastructure
 
         // Aquí registramos nuestra entidad User
         public DbSet<User> Users => Set<User>();
+        public DbSet<Plan> Plans => Set<Plan>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Plan>(entity =>
+            {
+                entity.ToTable("Plans"); // O el nombre que prefieras para la tabla
+                entity.HasKey(e => e.Id);
+
+                // Esto asegura que Postgres maneje el autoincremento correctamente
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd();
+
+                // Configuración para el precio (opcional pero recomendado para evitar advertencias de precisión)
+                entity.Property(e => e.Price)
+                      .HasColumnType("decimal(18,2)");
+            });
 
             // Configuramos las reglas de la tabla Users
             modelBuilder.Entity<User>(entity =>
