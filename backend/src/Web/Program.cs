@@ -23,6 +23,9 @@ builder.Services.AddScoped<ILocalityRepository, LocalityRepository>();
 builder.Services.AddScoped<ILocalityService, LocalityService>();
 builder.Services.AddScoped<IPlanService, PlanService>();
 
+//Health Check
+builder.Services.AddHealthChecks();
+
 //Db Conection 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -30,10 +33,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
-app.Map("/health", () => Results.Ok());
 
 if (app.Environment.IsDevelopment())
 {
@@ -41,8 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
 app.UseAuthorization();
-app.MapGet("/", () => Results.Ok(new { status = "ok" }));
 app.MapControllers();
+app.MapHealthChecks("/health");
 app.Run();
