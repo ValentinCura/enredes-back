@@ -38,6 +38,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.MapGet("/", () => Results.Ok(new { status = "ok" }));
+
 app.MapControllers();
 
 app.Run();
