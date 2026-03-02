@@ -18,6 +18,11 @@ namespace Infrastructure
 
             modelBuilder.Entity<Plan>(entity =>
             {
+                entity.Property(e => e.Features)
+                      .HasColumnType("text[]");
+                entity.Property(e => e.Colors)
+                      .HasColumnType("text[]");
+
                 entity.ToTable("Plans"); // O el nombre que prefieras para la tabla
                 entity.HasKey(e => e.Id);
 

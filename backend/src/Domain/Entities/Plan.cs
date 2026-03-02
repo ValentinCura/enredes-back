@@ -16,10 +16,11 @@ namespace Domain.Entities
         public string Speed { get; set; } = string.Empty;
 
         [Required]
-        public List<string> Features { get; set; } = new List<string>();
+        public List<string> Features { get; set; } = new();
 
         [Required]
-        public List<string> Colors { get; set; } = new List<string>();
+
+        public List<string> Colors { get; set; } = new();
 
         [Required]
         public bool Featured { get; set; } = false;
