@@ -8,44 +8,48 @@ namespace Infrastructure
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
-        // Aquí registramos nuestra entidad User
         public DbSet<User> Users => Set<User>();
         public DbSet<Plan> Plans => Set<Plan>();
+        public DbSet<Locality> Localities => Set<Locality>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Plan>(entity =>
+            modelBuilder.Entity<Locality>(entity =>
             {
-                entity.Property(e => e.Features)
-                      .HasColumnType("text[]");
-                entity.Property(e => e.Colors)
-                      .HasColumnType("text[]");
-
-                entity.ToTable("Plans"); // O el nombre que prefieras para la tabla
+                entity.ToTable("Localities");
                 entity.HasKey(e => e.Id);
-
-                // Esto asegura que Postgres maneje el autoincremento correctamente
-                entity.Property(e => e.Id)
-                      .ValueGeneratedOnAdd();
-
-                // Configuración para el precio (opcional pero recomendado para evitar advertencias de precisión)
-                entity.Property(e => e.Price)
-                      .HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Cod).IsRequired().HasMaxLength(20);
+                entity.Property(e => e.Province).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.Status).HasDefaultValue(true);
             });
 
-            // Configuramos las reglas de la tabla Users
+            modelBuilder.Entity<Plan>(entity =>
+            {
+                entity.Property(e => e.Features).HasColumnType("text[]");
+                entity.Property(e => e.Colors).HasColumnType("text[]");
+                entity.ToTable("Plans");
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
+                entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+
+                // Relación FK con Locality
+                entity.HasOne(e => e.Locality)
+                      .WithMany(l => l.Plans)
+                      .HasForeignKey(e => e.LocalityId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
+
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("Users");
                 entity.HasKey(e => e.Id);
-
-                // Índices Únicos (como en tu script de SQL Server)
+                entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.HasIndex(e => e.ClientNumber).IsUnique();
-
-                // Restricciones de longitud y obligatoriedad
                 entity.Property(e => e.ClientNumber).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.Type).HasDefaultValue("Client");
