@@ -30,7 +30,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
+
+app.Map("/health", () => Results.Ok());
 
 if (app.Environment.IsDevelopment())
 {
