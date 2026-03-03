@@ -35,7 +35,7 @@ namespace Infrastructure
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
-
+                entity.Property(e => e.Status).HasDefaultValue(true);
                 // Relación FK con Locality
                 entity.HasOne(e => e.Locality)
                       .WithMany(l => l.Plans)
@@ -53,6 +53,8 @@ namespace Infrastructure
                 entity.Property(e => e.ClientNumber).IsRequired().HasMaxLength(50);
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.Type).HasDefaultValue("Client");
+                entity.Property(e => e.Status).HasDefaultValue(true);
+
             });
         }
     }

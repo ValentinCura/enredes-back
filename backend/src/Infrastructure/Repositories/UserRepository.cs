@@ -22,4 +22,5 @@ public class UserRepository : BaseRepository<User>, IUserRepository
     {
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
+
 }

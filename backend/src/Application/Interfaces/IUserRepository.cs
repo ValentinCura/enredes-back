@@ -10,4 +10,5 @@ public interface IUserRepository : IBaseRepository<User>
     Task<User?> GetByEmailAsync(string email);
     Task<User?> GetByClientNumberAsync(string clientNumber);
     Task<bool> ExistsByEmailAsync(string email);
+
 }

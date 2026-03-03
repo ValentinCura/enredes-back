@@ -23,5 +23,7 @@ namespace Domain.Entities
         [Required]
         public int LocalityId { get; set; }
         public Locality Locality { get; set; } = null!;
+        public bool Status { get; set; } = true;
+
     }
 }
