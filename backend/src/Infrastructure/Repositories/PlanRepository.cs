@@ -14,5 +14,11 @@ namespace Infrastructure.Repositories
                 .Where(p => p.LocalityId == localityId)
                 .ToListAsync();
         }
+        public override async Task<List<Plan>> GetAllAsync()
+        {
+            return await _context.Plans
+                .Include(p => p.Locality)
+                .ToListAsync();
+        }
     }
 }
