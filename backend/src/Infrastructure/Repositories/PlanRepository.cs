@@ -11,6 +11,7 @@ namespace Infrastructure.Repositories
         public async Task<List<Plan>> GetByLocalityIdAsync(int localityId)
         {
             return await _context.Plans
+                .Include(p => p.Locality)
                 .Where(p => p.LocalityId == localityId)
                 .ToListAsync();
         }
