@@ -31,6 +31,12 @@ namespace Web.Controllers
             return Ok(locality);
         }
 
+        [HttpGet("actives")]
+        public async Task<IActionResult> GetActives()
+        {
+            var localities = await _localityService.GetActiveLocalitiesAsync();
+            return Ok(localities);
+        }
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] LocalityCreateDto dto)
         {
@@ -38,7 +44,7 @@ namespace Web.Controllers
             return CreatedAtAction(nameof(GetById), new { id = locality.Id }, locality);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] LocalityCreateDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] LocalityUpdateDto dto)
         {
             var locality = await _localityService.UpdateLocalityAsync(id, dto);
             if (locality == null) return NotFound();
@@ -53,11 +59,5 @@ namespace Web.Controllers
             return NoContent();
         }
 
-        [HttpGet("actives")]
-        public async Task<IActionResult> GetActives()
-        {
-            var localities = await _localityService.GetActiveLocalitiesAsync();
-            return Ok(localities);
-        }
     }
 }

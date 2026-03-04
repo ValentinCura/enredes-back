@@ -23,7 +23,8 @@ namespace Application.Services
                 Features = dto.Features,
                 Colors = dto.Colors,
                 Featured = dto.Featured,
-                LocalityId = dto.LocalityId
+                LocalityId = dto.LocalityId,
+                Status = dto.Status
             };
 
             await _planRepository.AddAsync(plan);
@@ -63,7 +64,7 @@ namespace Application.Services
             LocalityName = plan.Locality?.Name ?? string.Empty,
             CreatedAt = plan.CreatedAt
         };
-        public async Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanCreateDto dto)
+        public async Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanUpdateDto dto)
         {
             var plan = await _planRepository.GetByIdAsync(id);
             if (plan == null) return null;

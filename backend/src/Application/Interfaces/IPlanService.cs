@@ -8,7 +8,7 @@ namespace Application.Interfaces
         Task<PlanResponseDto?> GetPlanByIdAsync(int id);
         Task<IEnumerable<PlanResponseDto>> GetAllPlansAsync();
         Task<IEnumerable<PlanResponseDto>> GetPlansByLocalityIdAsync(int localityId);
-        Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanCreateDto dto);
+        Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanUpdateDto dto);
         Task<bool> DeletePlanAsync(int id);
         Task<IEnumerable<PlanResponseDto>> GetActivePlansAsync();
     }

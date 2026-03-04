@@ -50,7 +50,7 @@ namespace Application.Services
             Status = locality.Status,
             CreatedAt = locality.CreatedAt
         };
-        public async Task<LocalityResponseDto?> UpdateLocalityAsync(int id, LocalityCreateDto dto)
+        public async Task<LocalityResponseDto?> UpdateLocalityAsync(int id, LocalityUpdateDto dto)
         {
             var locality = await _localityRepository.GetByIdAsync(id);
             if (locality == null) return null;

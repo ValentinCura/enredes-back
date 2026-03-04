@@ -71,7 +71,7 @@ public class UserService : IUserService
             Phonenumber = user.Phonenumber
         });
     }
-    public async Task<UserResponseDto?> UpdateUserAsync(int id, UserCreateDto dto)
+    public async Task<UserResponseDto?> UpdateUserAsync(int id, UserUpdateDto dto)
     {
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) return null;
@@ -82,6 +82,7 @@ public class UserService : IUserService
         user.Lastname = dto.LastName;
         user.ClientNumber = dto.ClientNumber;
         user.Phonenumber = dto.Phonenumber;
+        user.Status = dto.Status;
 
         await _userRepository.UpdateAsync(user);
 

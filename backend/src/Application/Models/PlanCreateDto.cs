@@ -17,5 +17,8 @@ namespace Application.Models
         public bool Featured { get; set; } = false;
         [Required(ErrorMessage = "La localidad es obligatoria")]
         public int LocalityId { get; set; }
+
+        public bool Status { get; set; } = true;
+
     }
 }

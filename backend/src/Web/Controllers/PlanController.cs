@@ -36,6 +36,12 @@ namespace Web.Controllers
             var plans = await _planService.GetPlansByLocalityIdAsync(localityId);
             return Ok(plans);
         }
+        [HttpGet("actives")]
+        public async Task<IActionResult> GetActives()
+        {
+            var plans = await _planService.GetActivePlansAsync();
+            return Ok(plans);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PlanCreateDto dto)
@@ -44,7 +50,7 @@ namespace Web.Controllers
             return CreatedAtAction(nameof(GetById), new { id = plan.Id }, plan);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] PlanCreateDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] PlanUpdateDto dto)
         {
             var plan = await _planService.UpdatePlanAsync(id, dto);
             if (plan == null) return NotFound();
@@ -59,11 +65,5 @@ namespace Web.Controllers
             return NoContent();
         }
 
-        [HttpGet("actives")]
-        public async Task<IActionResult> GetActives()
-        {
-            var plans = await _planService.GetActivePlansAsync();
-            return Ok(plans);
-        }
     }
 }

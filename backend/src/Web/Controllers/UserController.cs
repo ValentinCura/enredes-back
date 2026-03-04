@@ -16,12 +16,6 @@ public class UserController : ControllerBase
         _userService = userService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] UserCreateDto userDto)
-    {
-        var result = await _userService.RegisterUserAsync(userDto);
-        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
-    }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
@@ -29,6 +23,12 @@ public class UserController : ControllerBase
         var user = await _userService.GetUserByIdAsync(id);
         if (user == null) return NotFound();
         return Ok(user);
+    }
+    [HttpGet("actives")]
+    public async Task<IActionResult> GetActives()
+    {
+        var users = await _userService.GetActiveUsersAsync();
+        return Ok(users);
     }
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -39,8 +39,14 @@ public class UserController : ControllerBase
         // Retornamos un 200 OK con la lista
         return Ok(users);
     }
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] UserCreateDto userDto)
+    {
+        var result = await _userService.RegisterUserAsync(userDto);
+        return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+    }
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UserCreateDto dto)
+    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateDto dto)
     {
         var user = await _userService.UpdateUserAsync(id, dto);
         if (user == null) return NotFound();
@@ -55,10 +61,4 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("actives")]
-    public async Task<IActionResult> GetActives()
-    {
-        var users = await _userService.GetActiveUsersAsync();
-        return Ok(users);
-    }
 }
