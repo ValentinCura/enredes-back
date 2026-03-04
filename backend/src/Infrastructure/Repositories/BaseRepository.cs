@@ -43,5 +43,11 @@ namespace Infrastructure.Repositories
             await _context.SaveChangesAsync();
             return entity;
         }
+        public virtual async Task<List<T>> GetActiveAsync()
+        {
+            return await _context.Set<T>()
+                .Where(e => EF.Property<bool>(e, "Status") == true)
+                .ToListAsync();
+        }
     }
 }

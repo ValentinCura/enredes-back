@@ -39,4 +39,26 @@ public class UserController : ControllerBase
         // Retornamos un 200 OK con la lista
         return Ok(users);
     }
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, [FromBody] UserCreateDto dto)
+    {
+        var user = await _userService.UpdateUserAsync(id, dto);
+        if (user == null) return NotFound();
+        return Ok(user);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var result = await _userService.DeleteUserAsync(id);
+        if (!result) return NotFound();
+        return NoContent();
+    }
+
+    [HttpGet("actives")]
+    public async Task<IActionResult> GetActives()
+    {
+        var users = await _userService.GetActiveUsersAsync();
+        return Ok(users);
+    }
 }

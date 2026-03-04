@@ -37,5 +37,27 @@ namespace Web.Controllers
             var locality = await _localityService.CreateLocalityAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = locality.Id }, locality);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] LocalityCreateDto dto)
+        {
+            var locality = await _localityService.UpdateLocalityAsync(id, dto);
+            if (locality == null) return NotFound();
+            return Ok(locality);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _localityService.DeleteLocalityAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
+        }
+
+        [HttpGet("actives")]
+        public async Task<IActionResult> GetActives()
+        {
+            var localities = await _localityService.GetActiveLocalitiesAsync();
+            return Ok(localities);
+        }
     }
 }

@@ -7,5 +7,8 @@ namespace Application.Interfaces
         Task<LocalityResponseDto> CreateLocalityAsync(LocalityCreateDto dto);
         Task<LocalityResponseDto?> GetLocalityByIdAsync(int id);
         Task<IEnumerable<LocalityResponseDto>> GetAllLocalitiesAsync();
+        Task<LocalityResponseDto?> UpdateLocalityAsync(int id, LocalityCreateDto dto);
+        Task<bool> DeleteLocalityAsync(int id);
+        Task<IEnumerable<LocalityResponseDto>> GetActiveLocalitiesAsync();
     }
 }

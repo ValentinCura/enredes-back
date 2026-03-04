@@ -50,5 +50,33 @@ namespace Application.Services
             Status = locality.Status,
             CreatedAt = locality.CreatedAt
         };
+        public async Task<LocalityResponseDto?> UpdateLocalityAsync(int id, LocalityCreateDto dto)
+        {
+            var locality = await _localityRepository.GetByIdAsync(id);
+            if (locality == null) return null;
+
+            locality.Name = dto.Name;
+            locality.Cod = dto.Cod;
+            locality.Province = dto.Province;
+            locality.Status = dto.Status;
+
+            await _localityRepository.UpdateAsync(locality);
+            return MapToDto(locality);
+        }
+
+        public async Task<bool> DeleteLocalityAsync(int id)
+        {
+            var locality = await _localityRepository.GetByIdAsync(id);
+            if (locality == null) return false;
+
+            await _localityRepository.RemoveAsync(locality);
+            return true;
+        }
+
+        public async Task<IEnumerable<LocalityResponseDto>> GetActiveLocalitiesAsync()
+        {
+            var localities = await _localityRepository.GetActiveAsync();
+            return localities.Select(MapToDto);
+        }
     }
 }

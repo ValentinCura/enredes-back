@@ -13,5 +13,7 @@ namespace Application.Interfaces
         Task<T> AddAsync(T entity);
         Task<T> UpdateAsync(T entity);
         Task<T> RemoveAsync(T entity);
+        Task<List<T>> GetActiveAsync();
+
     }
 }

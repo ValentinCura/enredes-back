@@ -43,5 +43,27 @@ namespace Web.Controllers
             var plan = await _planService.CreatePlanAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = plan.Id }, plan);
         }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, [FromBody] PlanCreateDto dto)
+        {
+            var plan = await _planService.UpdatePlanAsync(id, dto);
+            if (plan == null) return NotFound();
+            return Ok(plan);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var result = await _planService.DeletePlanAsync(id);
+            if (!result) return NotFound();
+            return NoContent();
+        }
+
+        [HttpGet("actives")]
+        public async Task<IActionResult> GetActives()
+        {
+            var plans = await _planService.GetActivePlansAsync();
+            return Ok(plans);
+        }
     }
 }

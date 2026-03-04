@@ -71,4 +71,51 @@ public class UserService : IUserService
             Phonenumber = user.Phonenumber
         });
     }
+    public async Task<UserResponseDto?> UpdateUserAsync(int id, UserCreateDto dto)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null) return null;
+
+        user.Email = dto.Email;
+        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+        user.Firstname = dto.FirstName;
+        user.Lastname = dto.LastName;
+        user.ClientNumber = dto.ClientNumber;
+        user.Phonenumber = dto.Phonenumber;
+
+        await _userRepository.UpdateAsync(user);
+
+        return new UserResponseDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = $"{user.Firstname} {user.Lastname}",
+            ClientNumber = user.ClientNumber,
+            Type = user.Type,
+            Phonenumber = user.Phonenumber
+        };
+    }
+
+    public async Task<bool> DeleteUserAsync(int id)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null) return false;
+
+        await _userRepository.RemoveAsync(user);
+        return true;
+    }
+
+    public async Task<IEnumerable<UserResponseDto>> GetActiveUsersAsync()
+    {
+        var users = await _userRepository.GetActiveAsync();
+        return users.Select(user => new UserResponseDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = $"{user.Firstname} {user.Lastname}",
+            ClientNumber = user.ClientNumber,
+            Type = user.Type,
+            Phonenumber = user.Phonenumber
+        });
+    }
 }

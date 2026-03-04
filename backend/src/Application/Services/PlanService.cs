@@ -63,5 +63,37 @@ namespace Application.Services
             LocalityName = plan.Locality?.Name ?? string.Empty,
             CreatedAt = plan.CreatedAt
         };
+        public async Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanCreateDto dto)
+        {
+            var plan = await _planRepository.GetByIdAsync(id);
+            if (plan == null) return null;
+
+            plan.Name = dto.Name;
+            plan.Price = dto.Price;
+            plan.Speed = dto.Speed;
+            plan.Features = dto.Features;
+            plan.Colors = dto.Colors;
+            plan.Featured = dto.Featured;
+            plan.LocalityId = dto.LocalityId;
+            plan.Status = dto.Status;
+
+            await _planRepository.UpdateAsync(plan);
+            return MapToDto(plan);
+        }
+
+        public async Task<bool> DeletePlanAsync(int id)
+        {
+            var plan = await _planRepository.GetByIdAsync(id);
+            if (plan == null) return false;
+
+            await _planRepository.RemoveAsync(plan);
+            return true;
+        }
+
+        public async Task<IEnumerable<PlanResponseDto>> GetActivePlansAsync()
+        {
+            var plans = await _planRepository.GetActiveAsync();
+            return plans.Select(MapToDto);
+        }
     }
 }
