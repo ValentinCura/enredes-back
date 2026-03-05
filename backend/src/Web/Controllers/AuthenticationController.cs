@@ -26,8 +26,8 @@ namespace Web.Controllers
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
+                Secure = Request.IsHttps,
+                SameSite = Request.IsHttps ? SameSiteMode.None : SameSiteMode.Lax,
                 Expires = DateTime.UtcNow.AddHours(1)
             };
             Response.Cookies.Append("token", result.Token, cookieOptions);

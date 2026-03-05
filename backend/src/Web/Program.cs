@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Web.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,8 @@ policy.WithOrigins(
     )
 */
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 
 if (app.Environment.IsDevelopment())
