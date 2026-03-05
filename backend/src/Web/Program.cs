@@ -94,7 +94,6 @@ policy.WithOrigins(
 */
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();
 
 
 if (app.Environment.IsDevelopment())
@@ -106,6 +105,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 app.MapHealthChecks("/health");
 app.Run();

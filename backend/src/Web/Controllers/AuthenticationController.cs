@@ -56,28 +56,16 @@ namespace Web.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
-            // 1. Intentamos obtener el ID de varios claims comunes por las dudas
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+            var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value
+                           ?? User.FindFirst("sub")?.Value;
 
-            if (userIdClaim == null)
-            {
-                return Unauthorized(new { message = "No se encontró el ID en los claims del token/cookie" });
-            }
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized(new { message = "No se encontró el ID en los claims del token" });
 
-            var user = await _userService.GetUserByIdAsync(int.Parse(userIdClaim.Value));
+            var user = await _userService.GetUserByIdAsync(int.Parse(userIdClaim));
+            if (user == null) return NotFound(new { message = "Usuario no encontrado" });
 
-            if (user == null) return NotFound(new { message = "Usuario no encontrado en la base de datos" });
-
-            // 2. Mapeo manual a un objeto anónimo o DTO (Evita datos sensibles y bucles)
-            return Ok(new
-            {
-                id = user.Id,
-                fullname = user.FullName,
-                email = user.Email,
-                phonenumber = user.Phonenumber,
-                type = user.Type, // Asegúrate de que este sea el string "Admin" o "User"
-                
-            });
+            return Ok(user); // UserResponseDto
         }
     }
 }
