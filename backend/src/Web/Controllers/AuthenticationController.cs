@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Application.Services;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,19 +22,16 @@ namespace Web.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] AuthenticationRequestDto request)
         {
-            var token = _authService.Autenticar(request);
-
+            var result = _authService.Autenticar(request);
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,      // JavaScript no puede leerla
-                Secure = true,        // Solo HTTPS
-                SameSite = SameSiteMode.None, // Necesario para cross-origin
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
                 Expires = DateTime.UtcNow.AddHours(1)
             };
-
-            Response.Cookies.Append("token", token, cookieOptions);
-
-            return Ok(new { message = "Login exitoso" });
+            Response.Cookies.Append("token", result.Token, cookieOptions);
+            return Ok(new { message = "Login exitoso", type = result.Type });
         }
 
         [HttpPost("logout")]

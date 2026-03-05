@@ -35,10 +35,9 @@ namespace Infrastructure.Services
             return user;
         }
 
-        public string Autenticar(AuthenticationRequestDto request)
+        public AuthenticationResponseDto Autenticar(AuthenticationRequestDto request)
         {
             var user = ValidateUser(request).Result;
-
             if (user == null)
                 throw new Exception("Email o contraseña incorrectos");
 
@@ -46,11 +45,11 @@ namespace Infrastructure.Services
             var credentials = new SigningCredentials(securityPassword, SecurityAlgorithms.HmacSha256);
 
             var claims = new List<Claim>
-            {
-                new Claim("sub", user.Id.ToString()),
-                new Claim("mail", user.Email),
-                new Claim("role", user.Type)
-            };
+    {
+        new Claim("sub", user.Id.ToString()),
+        new Claim("mail", user.Email),
+        new Claim("role", user.Type)
+    };
 
             var token = new JwtSecurityToken(
                 _options.Issuer,
@@ -60,7 +59,13 @@ namespace Infrastructure.Services
                 DateTime.UtcNow.AddHours(1),
                 credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            var tokenToReturn = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return new AuthenticationResponseDto
+            {
+                Token = tokenToReturn,
+                Type = user.Type
+            };
         }
 
         public class AuthenticationServiceOptions
