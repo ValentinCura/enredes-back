@@ -35,9 +35,9 @@ namespace Infrastructure.Services
             return user;
         }
 
-        public AuthenticationResponseDto Autenticar(AuthenticationRequestDto request)
+        public async Task<AuthenticationResponseDto> Autenticar(AuthenticationRequestDto request)
         {
-            var user = ValidateUser(request).Result;
+            var user = await ValidateUser(request);
             if (user == null)
                 throw new Exception("Email o contraseña incorrectos");
 

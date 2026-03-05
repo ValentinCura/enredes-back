@@ -20,9 +20,9 @@ namespace Web.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login([FromBody] AuthenticationRequestDto request)
+        public async Task<IActionResult> Login([FromBody] AuthenticationRequestDto request)
         {
-            var result = _authService.Autenticar(request);
+            var result = await _authService.Autenticar(request);
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true,
@@ -41,16 +41,14 @@ namespace Web.Controllers
             return Ok(new { message = "Logout exitoso" });
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
             var userId = User.FindFirst("sub")?.Value;
             if (userId == null) return Unauthorized();
-
             var user = await _userService.GetUserByIdAsync(int.Parse(userId));
             if (user == null) return NotFound();
-
             return Ok(user);
         }
     }

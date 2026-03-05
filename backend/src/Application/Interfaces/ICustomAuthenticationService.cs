@@ -4,6 +4,6 @@ namespace Application.Interfaces
 {
     public interface ICustomAuthenticationService
     {
-        AuthenticationResponseDto Autenticar(AuthenticationRequestDto request);
+        Task<AuthenticationResponseDto> Autenticar(AuthenticationRequestDto request);
     }
 }
