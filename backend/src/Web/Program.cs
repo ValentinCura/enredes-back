@@ -67,7 +67,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 var cookieToken = context.Request.Cookies["token"];
                 if (!string.IsNullOrEmpty(cookieToken))
                 {
-                    context.Token = cookieToken;
+                    context.Token = context.Request.Cookies["token"]; // debe coincidir
+
                 }
                 return Task.CompletedTask;
             }
