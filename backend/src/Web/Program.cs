@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Web.Middleware;
-
+using System.IdentityModel.Tokens.Jwt;
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // Esto evita que "sub" se transforme en otra cosa
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -63,7 +64,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             OnMessageReceived = context =>
             {
-                context.Token = context.Request.Cookies["token"];
+                var cookieToken = context.Request.Cookies["token"];
+                if (!string.IsNullOrEmpty(cookieToken))
+                {
+                    context.Token = cookieToken;
+                }
                 return Task.CompletedTask;
             }
         };
