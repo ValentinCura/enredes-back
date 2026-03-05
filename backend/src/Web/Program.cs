@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Web.Middleware;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 var port = Environment.GetEnvironmentVariable("PORT");
@@ -43,7 +44,7 @@ builder.Services.Configure<AuthenticationService.AuthenticationServiceOptions>(
     builder.Configuration.GetSection(AuthenticationService.AuthenticationServiceOptions.AuthenticationService));
 builder.Services.AddScoped<ICustomAuthenticationService, AuthenticationService>();
 
-builder.Services.AddAuthentication("Bearer")
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new()
