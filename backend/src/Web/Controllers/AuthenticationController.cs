@@ -41,7 +41,7 @@ namespace Web.Controllers
             return Ok(new { message = "Logout exitoso" });
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
