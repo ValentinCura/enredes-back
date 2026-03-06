@@ -15,6 +15,9 @@ public class UserService : IUserService
 
     public async Task<UserResponseDto> RegisterUserAsync(UserCreateDto userDto)
     {
+        var existingUser = await _userRepository.GetByEmailAsync(userDto.Email);
+        if (existingUser != null)
+            throw new ArgumentException("El email ya está registrado");
         var user = new User
         {
            

@@ -42,16 +42,7 @@ namespace Web.Controllers
             return Ok(new { message = "Logout exitoso" });
         }
 
-        //[Authorize]
-        //[HttpGet("me")]
-        //public async Task<IActionResult> GetCurrentUser()
-        //{
-        //    var userId = User.FindFirst("sub")?.Value;
-        //    if (userId == null) return Unauthorized();
-        //    var user = await _userService.GetUserByIdAsync(int.Parse(userId));
-        //    if (user == null) return NotFound();
-        //    return Ok(user);
-        //}
+       
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
@@ -67,5 +58,6 @@ namespace Web.Controllers
 
             return Ok(user); // UserResponseDto
         }
+
     }
 }
