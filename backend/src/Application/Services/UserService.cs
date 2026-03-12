@@ -43,6 +43,37 @@ public class UserService : IUserService
             Phonenumber = userDto.Phonenumber
         };
     }
+    public async Task<UserResponseDto> CreateAdminAsync(UserCreateDto dto)
+    {
+        // Verificar si el email ya existe
+        var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+        if (existingUser != null)
+            throw new InvalidOperationException("El email ya está registrado");
+
+        var admin = new User
+        {
+            Email = dto.Email,
+            Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+            Firstname = dto.FirstName,
+            Lastname = dto.LastName,
+            ClientNumber = dto.ClientNumber,
+            Phonenumber = dto.Phonenumber,
+            Type = "Admin", // ← Aquí defines que es Admin
+            Status = true
+        };
+
+        await _userRepository.AddAsync(admin);
+
+        return new UserResponseDto
+        {
+            Id = admin.Id,
+            Email = admin.Email,
+            FullName = $"{admin.Firstname} {admin.Lastname}",
+            ClientNumber = admin.ClientNumber,
+            Type = admin.Type,
+            Phonenumber = admin.Phonenumber
+        };
+    }
 
     public async Task<UserResponseDto?> GetUserByIdAsync(int id)
     {

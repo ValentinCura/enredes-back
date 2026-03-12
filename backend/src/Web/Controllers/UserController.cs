@@ -48,6 +48,24 @@ public class UserController : ControllerBase
         var result = await _userService.RegisterUserAsync(userDto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
+
+    [Authorize(Roles = "Admin")]
+    [HttpPost("create-admin")]
+    public async Task<IActionResult> CreateAdmin([FromBody] UserCreateDto userDto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        try
+        {
+            var result = await _userService.CreateAdminAsync(userDto);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
     [Authorize]
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UserUpdateDto dto)
