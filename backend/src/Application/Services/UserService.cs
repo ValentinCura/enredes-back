@@ -93,9 +93,10 @@ public class UserService : IUserService
     {
         // 1. Obtenemos todos los usuarios desde el repositorio (usando el BaseRepository)
         var users = await _userRepository.GetAllAsync();
+        var clients = users.Where(u => u.Type == "Client");
 
         // 2. Mapeamos la lista de Entidades a una lista de DTOs
-        return users.Select(user => new UserResponseDto
+        return clients.Select(user => new UserResponseDto
         {
             Id = user.Id,
             Email = user.Email,
@@ -149,7 +150,8 @@ public class UserService : IUserService
             FullName = $"{user.Firstname} {user.Lastname}",
             ClientNumber = user.ClientNumber,
             Type = user.Type,
-            Phonenumber = user.Phonenumber
+            Phonenumber = user.Phonenumber,
+            Status = user.Status
         };
     }
     public async Task<bool> ChangeStatusAsync(int id, bool status)
@@ -173,8 +175,9 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserResponseDto>> GetActiveUsersAsync()
     {
-        var users = await _userRepository.GetActiveAsync();
-        return users.Select(user => new UserResponseDto
+        var users = await _userRepository.GetAllAsync();
+        var clients = users.Where(u => u.Type == "Client");
+        return clients.Select(user => new UserResponseDto
         {
             Id = user.Id,
             Email = user.Email,

@@ -12,5 +12,6 @@ public interface IUserService
     Task<bool> DeleteUserAsync(int id);
     Task<IEnumerable<UserResponseDto>> GetActiveUsersAsync();
     Task<bool> ChangeStatusAsync(int id, bool status);
+    Task<UserResponseDto> CreateAdminAsync(UserCreateDto dto);
 
 }
