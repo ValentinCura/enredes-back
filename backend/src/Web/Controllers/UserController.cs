@@ -1,7 +1,9 @@
 ﻿
 using Application.Interfaces; // Aquí estará la interfaz del servicio
 using Application.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Web.Controllers;
 
@@ -15,8 +17,7 @@ public class UserController : ControllerBase
     {
         _userService = userService;
     }
-
-
+    [Authorize(Roles = "Admin")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(int id)
     {
@@ -24,12 +25,14 @@ public class UserController : ControllerBase
         if (user == null) return NotFound();
         return Ok(user);
     }
+    [Authorize(Roles = "Admin")]
     [HttpGet("actives")]
     public async Task<IActionResult> GetActives()
     {
         var users = await _userService.GetActiveUsersAsync();
         return Ok(users);
     }
+    [Authorize(Roles = "Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -45,14 +48,35 @@ public class UserController : ControllerBase
         var result = await _userService.RegisterUserAsync(userDto);
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromBody] UserUpdateDto dto)
+    [Authorize]
+    [HttpPut]
+    public async Task<IActionResult> Update([FromBody] UserUpdateDto dto)
     {
-        var user = await _userService.UpdateUserAsync(id, dto);
-        if (user == null) return NotFound();
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                          ?? User.FindFirst("sub")?.Value;
+
+        if (string.IsNullOrEmpty(userIdClaim) || !int.TryParse(userIdClaim, out int userId))
+            return Unauthorized(new { message = "No se pudo identificar al usuario" });
+
+        var user = await _userService.UpdateUserAsync(userId, dto);
+
+        if (user == null)
+            return NotFound(new { message = "Usuario no encontrado" });
+
         return Ok(user);
     }
-
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id}/status")]
+    public async Task<IActionResult> ChangeStatus(int id, [FromBody] ChangeStatusDto dto)
+    {
+        var result = await _userService.ChangeStatusAsync(id, dto.Status);
+        if (!result) return NotFound();
+        return Ok(new { message = "Estado actualizado correctamente" });
+    }
+    [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

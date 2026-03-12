@@ -71,21 +71,43 @@ public class UserService : IUserService
             FullName = $"{user.Firstname} {user.Lastname}",
             ClientNumber = user.ClientNumber,
             Type = user.Type, // O el valor que tengas en la entidad,
-            Phonenumber = user.Phonenumber
+            Phonenumber = user.Phonenumber,
+            Status = user.Status
         });
     }
     public async Task<UserResponseDto?> UpdateUserAsync(int id, UserUpdateDto dto)
     {
+        // Validar que al menos un campo tenga valor
+        if (string.IsNullOrWhiteSpace(dto.Email) &&
+            string.IsNullOrWhiteSpace(dto.Password) &&
+            string.IsNullOrWhiteSpace(dto.FirstName) &&
+            string.IsNullOrWhiteSpace(dto.LastName) &&
+            string.IsNullOrWhiteSpace(dto.ClientNumber) &&
+            string.IsNullOrWhiteSpace(dto.Phonenumber))
+        {
+            throw new InvalidOperationException("Debe proporcionar al menos un campo para actualizar");
+        }
+
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) return null;
 
-        user.Email = dto.Email;
-        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
-        user.Firstname = dto.FirstName;
-        user.Lastname = dto.LastName;
-        user.ClientNumber = dto.ClientNumber;
-        user.Phonenumber = dto.Phonenumber;
-        user.Status = dto.Status;
+        if (!string.IsNullOrWhiteSpace(dto.Email))
+            user.Email = dto.Email;
+
+        if (!string.IsNullOrWhiteSpace(dto.Password))
+            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
+
+        if (!string.IsNullOrWhiteSpace(dto.FirstName))
+            user.Firstname = dto.FirstName;
+
+        if (!string.IsNullOrWhiteSpace(dto.LastName))
+            user.Lastname = dto.LastName;
+
+        if (!string.IsNullOrWhiteSpace(dto.ClientNumber))
+            user.ClientNumber = dto.ClientNumber;
+
+        if (!string.IsNullOrWhiteSpace(dto.Phonenumber))
+            user.Phonenumber = dto.Phonenumber;
 
         await _userRepository.UpdateAsync(user);
 
@@ -98,6 +120,15 @@ public class UserService : IUserService
             Type = user.Type,
             Phonenumber = user.Phonenumber
         };
+    }
+    public async Task<bool> ChangeStatusAsync(int id, bool status)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null) return false;
+
+        user.Status = status;
+        await _userRepository.UpdateAsync(user);
+        return true;
     }
 
     public async Task<bool> DeleteUserAsync(int id)
