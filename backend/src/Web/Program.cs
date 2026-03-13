@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Web.Middleware;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.RateLimiting;
 JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear(); // Esto evita que "sub" se transforme en otra cosa
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,9 +21,17 @@ if (!string.IsNullOrEmpty(port))
     builder.WebHost.UseUrls($"http://*:{port}");
 }
 
-builder.Services.AddControllers();
 // Add services to the container.
 
+builder.Services.AddControllers();
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("forgotPassword", opt =>
+    {
+        opt.PermitLimit = 3;
+        opt.Window = TimeSpan.FromMinutes(15);
+    });
+});
 builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -102,7 +111,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseRateLimiter();
 app.UseCors("FrontendPolicy");
 app.UseAuthentication();
 app.UseAuthorization();

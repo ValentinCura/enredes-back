@@ -4,7 +4,9 @@ using Application.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Security.Claims;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace Web.Controllers
 {
@@ -58,6 +60,7 @@ namespace Web.Controllers
 
             return Ok(user); // UserResponseDto
         }
+        [EnableRateLimiting("forgotPassword")]
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
         {
