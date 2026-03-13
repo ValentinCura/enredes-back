@@ -25,7 +25,6 @@ public class UserService : IUserService
             Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
             Firstname = userDto.FirstName,
             Lastname = userDto.LastName,
-            ClientNumber = userDto.ClientNumber,
             Phonenumber = userDto.Phonenumber,
             Type = "Client"
         };
@@ -38,7 +37,6 @@ public class UserService : IUserService
             Id = user.Id, // Aquí 'Id' ya tendrá el valor 1, 2, 3...
             Email = user.Email,
             FullName = $"{user.Firstname} {user.Lastname}",
-            ClientNumber = user.ClientNumber,
             Type = user.Type,
             Phonenumber = userDto.Phonenumber
         };
@@ -56,7 +54,6 @@ public class UserService : IUserService
             Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             Firstname = dto.FirstName,
             Lastname = dto.LastName,
-            ClientNumber = dto.ClientNumber,
             Phonenumber = dto.Phonenumber,
             Type = "Admin", // ← Aquí defines que es Admin
             Status = true
@@ -69,7 +66,6 @@ public class UserService : IUserService
             Id = admin.Id,
             Email = admin.Email,
             FullName = $"{admin.Firstname} {admin.Lastname}",
-            ClientNumber = admin.ClientNumber,
             Type = admin.Type,
             Phonenumber = admin.Phonenumber
         };
@@ -85,7 +81,6 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             FullName = $"{user.Firstname} {user.Lastname}",
-            ClientNumber = user.ClientNumber,
             Phonenumber = user.Phonenumber
         };
     }
@@ -101,7 +96,6 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             FullName = $"{user.Firstname} {user.Lastname}",
-            ClientNumber = user.ClientNumber,
             Type = user.Type, // O el valor que tengas en la entidad,
             Phonenumber = user.Phonenumber,
             Status = user.Status
@@ -114,7 +108,6 @@ public class UserService : IUserService
             string.IsNullOrWhiteSpace(dto.Password) &&
             string.IsNullOrWhiteSpace(dto.FirstName) &&
             string.IsNullOrWhiteSpace(dto.LastName) &&
-            string.IsNullOrWhiteSpace(dto.ClientNumber) &&
             string.IsNullOrWhiteSpace(dto.Phonenumber))
         {
             throw new InvalidOperationException("Debe proporcionar al menos un campo para actualizar");
@@ -135,8 +128,6 @@ public class UserService : IUserService
         if (!string.IsNullOrWhiteSpace(dto.LastName))
             user.Lastname = dto.LastName;
 
-        if (!string.IsNullOrWhiteSpace(dto.ClientNumber))
-            user.ClientNumber = dto.ClientNumber;
 
         if (!string.IsNullOrWhiteSpace(dto.Phonenumber))
             user.Phonenumber = dto.Phonenumber;
@@ -148,7 +139,6 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             FullName = $"{user.Firstname} {user.Lastname}",
-            ClientNumber = user.ClientNumber,
             Type = user.Type,
             Phonenumber = user.Phonenumber,
             Status = user.Status
@@ -182,7 +172,6 @@ public class UserService : IUserService
             Id = user.Id,
             Email = user.Email,
             FullName = $"{user.Firstname} {user.Lastname}",
-            ClientNumber = user.ClientNumber,
             Type = user.Type,
             Phonenumber = user.Phonenumber
         });

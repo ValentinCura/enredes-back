@@ -8,7 +8,6 @@ public interface IUserRepository : IBaseRepository<User>
     // Aquí agregamos comportamientos que NO son genéricos
     // Por ejemplo, buscar por email para el Login o verificar si un número de cliente existe
     Task<User?> GetByEmailAsync(string email);
-    Task<User?> GetByClientNumberAsync(string clientNumber);
     Task<bool> ExistsByEmailAsync(string email);
 
 }

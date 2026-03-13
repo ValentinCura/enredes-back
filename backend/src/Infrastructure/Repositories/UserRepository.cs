@@ -13,10 +13,7 @@ public class UserRepository : BaseRepository<User>, IUserRepository
         return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 
-    public async Task<User?> GetByClientNumberAsync(string clientNumber)
-    {
-        return await _context.Users.FirstOrDefaultAsync(u => u.ClientNumber == clientNumber);
-    }
+    
 
     public async Task<bool> ExistsByEmailAsync(string email)
     {
