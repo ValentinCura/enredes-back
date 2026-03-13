@@ -36,7 +36,8 @@ public class UserService : IUserService
         {
             Id = user.Id, // Aquí 'Id' ya tendrá el valor 1, 2, 3...
             Email = user.Email,
-            FullName = $"{user.Firstname} {user.Lastname}",
+            FirstName = user.Firstname,
+            LastName = user.Lastname,
             Type = user.Type,
             Phonenumber = userDto.Phonenumber
         };
@@ -65,7 +66,8 @@ public class UserService : IUserService
         {
             Id = admin.Id,
             Email = admin.Email,
-            FullName = $"{admin.Firstname} {admin.Lastname}",
+            FirstName = admin.Firstname,
+            LastName = admin.Lastname,
             Type = admin.Type,
             Phonenumber = admin.Phonenumber
         };
@@ -80,7 +82,8 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Email = user.Email,
-            FullName = $"{user.Firstname} {user.Lastname}",
+            FirstName = user.Firstname,
+            LastName = user.Lastname,
             Phonenumber = user.Phonenumber
         };
     }
@@ -95,7 +98,8 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Email = user.Email,
-            FullName = $"{user.Firstname} {user.Lastname}",
+            FirstName = user.Firstname,
+            LastName = user.Lastname,
             Type = user.Type, // O el valor que tengas en la entidad,
             Phonenumber = user.Phonenumber,
             Status = user.Status
@@ -138,7 +142,8 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Email = user.Email,
-            FullName = $"{user.Firstname} {user.Lastname}",
+            FirstName = user.Firstname,
+            LastName = user.Lastname,
             Type = user.Type,
             Phonenumber = user.Phonenumber,
             Status = user.Status
@@ -171,7 +176,8 @@ public class UserService : IUserService
         {
             Id = user.Id,
             Email = user.Email,
-            FullName = $"{user.Firstname} {user.Lastname}",
+            FirstName = user.Firstname,
+            LastName = user.Lastname,
             Type = user.Type,
             Phonenumber = user.Phonenumber
         });
