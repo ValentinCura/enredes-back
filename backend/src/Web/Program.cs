@@ -20,8 +20,10 @@ if (!string.IsNullOrEmpty(port))
     builder.WebHost.UseUrls($"http://*:{port}");
 }
 
-// Add services to the container.
 builder.Services.AddControllers();
+// Add services to the container.
+
+builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IUserService, UserService>();

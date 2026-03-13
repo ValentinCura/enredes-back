@@ -20,4 +20,10 @@ public class UserRepository : BaseRepository<User>, IUserRepository
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
 
+    public async Task<User?> GetByResetTokenAsync(string token)
+    {
+        return await _context.Users
+            .FirstOrDefaultAsync(u => u.PasswordResetToken == token);
+    }
+
 }

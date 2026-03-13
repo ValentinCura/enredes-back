@@ -99,5 +99,15 @@ namespace Application.Services
         }).ToList(),
             CreatedAt = plan.CreatedAt
         };
+
+        public async Task<bool> ChangeStatusAsync(int id, bool status)
+        {
+            var plan = await _planRepository.GetByIdAsync(id);
+            if (plan == null) return false;
+            plan.Status = status;
+            await _planRepository.UpdateAsync(plan);
+            return true;
+        }
+
     }
 }

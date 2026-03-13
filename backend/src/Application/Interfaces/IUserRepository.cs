@@ -9,5 +9,5 @@ public interface IUserRepository : IBaseRepository<User>
     // Por ejemplo, buscar por email para el Login o verificar si un número de cliente existe
     Task<User?> GetByEmailAsync(string email);
     Task<bool> ExistsByEmailAsync(string email);
-
+    Task<User?> GetByResetTokenAsync(string token);
 }

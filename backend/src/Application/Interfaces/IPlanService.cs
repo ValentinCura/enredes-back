@@ -11,5 +11,6 @@ namespace Application.Interfaces
         Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanUpdateDto dto);
         Task<bool> DeletePlanAsync(int id);
         Task<IEnumerable<PlanResponseDto>> GetActivePlansAsync();
+        Task<bool> ChangeStatusAsync(int id, bool status);
     }
 }

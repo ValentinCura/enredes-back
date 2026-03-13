@@ -27,7 +27,14 @@ namespace Application.Services
 
             return MapToDto(locality);
         }
-
+        public async Task<bool> ChangeStatusAsync(int id, bool status)
+        {
+            var locality = await _localityRepository.GetByIdAsync(id);
+            if (locality == null) return false;
+            locality.Status = status;
+            await _localityRepository.UpdateAsync(locality);
+            return true;
+        }
         public async Task<LocalityResponseDto?> GetLocalityByIdAsync(int id)
         {
             var locality = await _localityRepository.GetByIdAsync(id);

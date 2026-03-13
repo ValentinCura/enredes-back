@@ -13,5 +13,8 @@ public interface IUserService
     Task<IEnumerable<UserResponseDto>> GetActiveUsersAsync();
     Task<bool> ChangeStatusAsync(int id, bool status);
     Task<UserResponseDto> CreateAdminAsync(UserCreateDto dto);
+    Task<bool> ChangePasswordAsync(int id, ChangePasswordDto dto);
+    Task ForgotPasswordAsync(string email);
+    Task ResetPasswordAsync(ResetPasswordDto dto);
 
 }

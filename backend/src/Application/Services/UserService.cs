@@ -7,10 +7,11 @@ namespace Application.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-
-    public UserService(IUserRepository userRepository)
+    private readonly IMailService _mailService;
+    public UserService(IUserRepository userRepository, IMailService mailService)
     {
         _userRepository = userRepository;
+        _mailService = mailService;
     }
 
     public async Task<UserResponseDto> RegisterUserAsync(UserCreateDto userDto)
@@ -109,7 +110,6 @@ public class UserService : IUserService
     {
         // Validar que al menos un campo tenga valor
         if (string.IsNullOrWhiteSpace(dto.Email) &&
-            string.IsNullOrWhiteSpace(dto.Password) &&
             string.IsNullOrWhiteSpace(dto.FirstName) &&
             string.IsNullOrWhiteSpace(dto.LastName) &&
             string.IsNullOrWhiteSpace(dto.Phonenumber))
@@ -120,11 +120,16 @@ public class UserService : IUserService
         var user = await _userRepository.GetByIdAsync(id);
         if (user == null) return null;
 
+        if (dto.Email != null && dto.Email != user.Email)
+        {
+            var existingUser = await _userRepository.GetByEmailAsync(dto.Email);
+            if (existingUser != null)
+                throw new ArgumentException("El email ya está registrado");
+        }
+
         if (!string.IsNullOrWhiteSpace(dto.Email))
             user.Email = dto.Email;
 
-        if (!string.IsNullOrWhiteSpace(dto.Password))
-            user.Password = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
         if (!string.IsNullOrWhiteSpace(dto.FirstName))
             user.Firstname = dto.FirstName;
@@ -159,6 +164,57 @@ public class UserService : IUserService
         return true;
     }
 
+    public async Task ForgotPasswordAsync(string email)
+    {
+        var user = await _userRepository.GetByEmailAsync(email);
+        if (user == null) return;
+
+        var token = Guid.NewGuid().ToString();
+        user.PasswordResetToken = token;
+        user.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(1);
+        await _userRepository.UpdateAsync(user);
+
+        var resetLink = $"https://enredes.vercel.app/reset-password?token={token}";
+        var subject = "Restablecer contraseña - Enredes";
+        var message = $@"
+        <h2>Restablecer contraseña</h2>
+        <p>Hacé click en el siguiente link para restablecer tu contraseña:</p>
+        <a href='{resetLink}'>Restablecer contraseña</a>
+        <p>El link expira en 1 hora.</p>
+        <p>Si no solicitaste esto, ignorá este email.</p>
+    ";
+
+        _mailService.Send(subject, message, email);
+    }
+
+    public async Task ResetPasswordAsync(ResetPasswordDto dto)
+    {
+        var user = await _userRepository.GetByResetTokenAsync(dto.Token);
+        if (user == null)
+            throw new ArgumentException("Token inválido");
+
+        if (user.PasswordResetTokenExpiry < DateTime.UtcNow)
+            throw new ArgumentException("El token expiró");
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        user.PasswordResetToken = null;
+        user.PasswordResetTokenExpiry = null;
+        await _userRepository.UpdateAsync(user);
+    }
+
+
+    public async Task<bool> ChangePasswordAsync(int id, ChangePasswordDto dto)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null) return false;
+
+        if (!BCrypt.Net.BCrypt.Verify(dto.CurrentPassword, user.Password))
+            throw new ArgumentException("La contraseña actual es incorrecta");
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
     public async Task<bool> DeleteUserAsync(int id)
     {
         var user = await _userRepository.GetByIdAsync(id);

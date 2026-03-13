@@ -86,6 +86,16 @@ public class UserController : ControllerBase
 
         return Ok(user);
     }
+
+    [Authorize]
+    [HttpPatch("{id}/password")]
+    public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDto dto)
+    {
+        var result = await _userService.ChangePasswordAsync(id, dto);
+        if (!result) return NotFound();
+        return Ok(new { message = "Contraseña actualizada correctamente" });
+    }
+
     [Authorize(Roles = "Admin")]
     [HttpPatch("{id}/status")]
     public async Task<IActionResult> ChangeStatus(int id, [FromBody] ChangeStatusDto dto)
@@ -94,6 +104,7 @@ public class UserController : ControllerBase
         if (!result) return NotFound();
         return Ok(new { message = "Estado actualizado correctamente" });
     }
+
     [Authorize(Roles = "Admin")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)

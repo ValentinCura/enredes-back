@@ -58,6 +58,19 @@ namespace Web.Controllers
 
             return Ok(user); // UserResponseDto
         }
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            await _userService.ForgotPasswordAsync(dto.Email);
+            return Ok(new { message = "Si el email existe, recibirás un link para restablecer tu contraseña" });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            await _userService.ResetPasswordAsync(dto);
+            return Ok(new { message = "Contraseña restablecida correctamente" });
+        }
 
     }
 }

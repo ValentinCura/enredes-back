@@ -25,12 +25,13 @@ namespace Infrastructure.Services
                 return null;
 
             var user = await _userRepository.GetByEmailAsync(request.Email);
-
             if (user == null) return null;
 
-            // Verificamos la contraseña con BCrypt
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
                 return null;
+
+            if (!user.Status)
+                throw new UnauthorizedAccessException("Usuario Inhabilitado");
 
             return user;
         }

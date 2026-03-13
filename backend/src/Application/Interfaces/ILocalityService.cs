@@ -10,5 +10,7 @@ namespace Application.Interfaces
         Task<LocalityResponseDto?> UpdateLocalityAsync(int id, LocalityUpdateDto dto);
         Task<bool> DeleteLocalityAsync(int id);
         Task<IEnumerable<LocalityResponseDto>> GetActiveLocalitiesAsync();
+        Task<bool> ChangeStatusAsync(int id, bool status);
+
     }
 }

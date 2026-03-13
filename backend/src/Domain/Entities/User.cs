@@ -33,6 +33,8 @@ namespace Domain.Entities
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool Status { get; set; } = true;
+        public string? PasswordResetToken { get; set; }
+        public DateTime? PasswordResetTokenExpiry { get; set; }
 
     }
 }
