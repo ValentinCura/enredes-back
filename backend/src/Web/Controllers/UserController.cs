@@ -88,14 +88,15 @@ public class UserController : ControllerBase
     }
 
     [Authorize]
-    [HttpPatch("{id}/password")]
-    public async Task<IActionResult> ChangePassword(int id, [FromBody] ChangePasswordDto dto)
+    [HttpPatch("password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
     {
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userIdClaim) || int.Parse(userIdClaim) != id)
-            return Forbid();
+        if (string.IsNullOrEmpty(userIdClaim))
+            return Unauthorized();
 
-        var result = await _userService.ChangePasswordAsync(id, dto);
+        var userId = int.Parse(userIdClaim);
+        var result = await _userService.ChangePasswordAsync(userId, dto);
         if (!result) return NotFound();
         return Ok(new { message = "Contraseña actualizada correctamente" });
     }
