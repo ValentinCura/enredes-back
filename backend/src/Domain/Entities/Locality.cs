@@ -13,8 +13,6 @@ namespace Domain.Entities
         public string Province { get; set; } = string.Empty;
         public bool Status { get; set; } = true;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-        // Navegación
-        public ICollection<Plan> Plans { get; set; } = new List<Plan>();
+        public List<PlanLocality> PlanLocalities { get; set; } = new();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Models;
 using Domain.Entities;
-
 namespace Application.Services
 {
     public class PlanService : IPlanService
@@ -20,15 +19,14 @@ namespace Application.Services
                 Name = dto.Name,
                 Price = dto.Price,
                 Speed = dto.Speed,
-                Features = dto.Features,
-                Colors = dto.Colors,
-                Featured = dto.Featured,
-                LocalityId = dto.LocalityId,
-                Status = dto.Status
+                Features = dto.Features ?? new List<string>(),
+                Status = true,
+                PlanLocalities = dto.LocalityIds.Select(id => new PlanLocality
+                {
+                    LocalityId = id
+                }).ToList()
             };
-
             await _planRepository.AddAsync(plan);
-
             return MapToDto(plan);
         }
 
@@ -51,32 +49,22 @@ namespace Application.Services
             return plans.Select(MapToDto);
         }
 
-        private static PlanResponseDto MapToDto(Plan plan) => new()
-        {
-            Id = plan.Id,
-            Name = plan.Name,
-            Price = plan.Price,
-            Speed = plan.Speed,
-            Features = plan.Features,
-            Colors = plan.Colors,
-            Featured = plan.Featured,
-            LocalityId = plan.LocalityId,
-            LocalityName = plan.Locality?.Name ?? string.Empty,
-            CreatedAt = plan.CreatedAt
-        };
         public async Task<PlanResponseDto?> UpdatePlanAsync(int id, PlanUpdateDto dto)
         {
-            var plan = await _planRepository.GetByIdAsync(id);
+            var plan = await _planRepository.GetByIdWithLocalitiesAsync(id);
             if (plan == null) return null;
 
-            plan.Name = dto.Name;
-            plan.Price = dto.Price;
-            plan.Speed = dto.Speed;
-            plan.Features = dto.Features;
-            plan.Colors = dto.Colors;
-            plan.Featured = dto.Featured;
-            plan.LocalityId = dto.LocalityId;
-            plan.Status = dto.Status;
+            if (dto.Name != null) plan.Name = dto.Name; 
+            if (dto.Price != null) plan.Price = dto.Price.Value;
+            if (dto.Status != null) plan.Status = dto.Status.Value;
+            if (dto.Speed != null) plan.Speed = dto.Speed;
+            if (dto.Features != null) plan.Features = dto.Features;
+            if (dto.LocalityIds != null)
+                plan.PlanLocalities = dto.LocalityIds.Select(localityId => new PlanLocality
+                {
+                    LocalityId = localityId,
+                    PlanId = plan.Id
+                }).ToList();
 
             await _planRepository.UpdateAsync(plan);
             return MapToDto(plan);
@@ -86,7 +74,6 @@ namespace Application.Services
         {
             var plan = await _planRepository.GetByIdAsync(id);
             if (plan == null) return false;
-
             await _planRepository.RemoveAsync(plan);
             return true;
         }
@@ -96,5 +83,21 @@ namespace Application.Services
             var plans = await _planRepository.GetActiveAsync();
             return plans.Select(MapToDto);
         }
+
+        private static PlanResponseDto MapToDto(Plan plan) => new()
+        {
+            Id = plan.Id,
+            Name = plan.Name,
+            Price = plan.Price,
+            Speed = plan.Speed,
+            Status = plan.Status,
+            Localities = plan.PlanLocalities
+        .Select(pl => new LocalitySimpleDto
+        {
+            Id = pl.LocalityId,
+            Name = pl.Locality?.Name ?? string.Empty
+        }).ToList(),
+            CreatedAt = plan.CreatedAt
+        };
     }
 }

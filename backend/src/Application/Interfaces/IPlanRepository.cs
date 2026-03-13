@@ -6,5 +6,6 @@ namespace Application.Interfaces
     public interface IPlanRepository : IBaseRepository<Plan>
     {
         Task<List<Plan>> GetByLocalityIdAsync(int localityId);
+        Task<Plan?> GetByIdWithLocalitiesAsync(int id);
     }
 }

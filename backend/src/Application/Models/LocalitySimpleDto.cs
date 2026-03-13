@@ -1,0 +1,8 @@
+﻿namespace Application.Models
+{
+    public class LocalitySimpleDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+}

@@ -1,19 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-public class PlanUpdateDto
+﻿namespace Application.Models
 {
-    [Required]
-    public string Name { get; set; } = string.Empty;
-    [Required]
-    public decimal Price { get; set; }
-    [Required]
-    public string Speed { get; set; } = string.Empty;
-    [Required]
-    public List<string> Features { get; set; } = new();
-    [Required]
-    public List<string> Colors { get; set; } = new();
-    public bool Featured { get; set; } = false;
-    public bool Status { get; set; } = true;
-    [Required]
-    public int LocalityId { get; set; }
+    public class PlanUpdateDto
+    {
+        public string? Name { get; set; }
+        public decimal? Price { get; set; }
+        public string? Speed { get; set; }
+        public List<string>? Features { get; set; }
+        public bool? Status { get; set; }
+        public List<int>? LocalityIds { get; set; }
+    }
 }

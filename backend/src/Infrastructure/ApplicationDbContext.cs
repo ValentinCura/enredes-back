@@ -1,16 +1,14 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-
-
 namespace Infrastructure
 {
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
-
         public DbSet<User> Users => Set<User>();
         public DbSet<Plan> Plans => Set<Plan>();
         public DbSet<Locality> Localities => Set<Locality>();
+        public DbSet<PlanLocality> PlanLocalities => Set<PlanLocality>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,18 +27,27 @@ namespace Infrastructure
 
             modelBuilder.Entity<Plan>(entity =>
             {
-                entity.Property(e => e.Features).HasColumnType("text[]");
-                entity.Property(e => e.Colors).HasColumnType("text[]");
                 entity.ToTable("Plans");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Price).HasColumnType("decimal(18,2)");
+                entity.Property(e => e.Features).HasColumnType("text[]");
                 entity.Property(e => e.Status).HasDefaultValue(true);
-                // Relación FK con Locality
+            });
+
+            // Tabla intermedia N a M
+            modelBuilder.Entity<PlanLocality>(entity =>
+            {
+                entity.ToTable("PlanLocalities");
+                entity.HasKey(e => new { e.PlanId, e.LocalityId });
+
+                entity.HasOne(e => e.Plan)
+                      .WithMany(p => p.PlanLocalities)
+                      .HasForeignKey(e => e.PlanId);
+
                 entity.HasOne(e => e.Locality)
-                      .WithMany(l => l.Plans)
-                      .HasForeignKey(e => e.LocalityId)
-                      .OnDelete(DeleteBehavior.Restrict);
+                      .WithMany(l => l.PlanLocalities)
+                      .HasForeignKey(e => e.LocalityId);
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -52,7 +59,6 @@ namespace Infrastructure
                 entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.Type).HasDefaultValue("Client");
                 entity.Property(e => e.Status).HasDefaultValue(true);
-
             });
         }
     }
