@@ -66,6 +66,14 @@ public class UserController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+    [Authorize(Roles = "Admin")]
+    [HttpPatch("{id}/reset-password")]
+    public async Task<IActionResult> AdminResetPassword(int id, [FromBody] AdminResetPasswordDto dto)
+    {
+        var result = await _userService.AdminResetPasswordAsync(id, dto.NewPassword);
+        if (!result) return NotFound();
+        return Ok(new { message = "Contraseña actualizada correctamente" });
+    }
     [Authorize]
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UserUpdateDto dto)

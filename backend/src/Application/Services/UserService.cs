@@ -73,6 +73,16 @@ public class UserService : IUserService
             Phonenumber = admin.Phonenumber
         };
     }
+    public async Task<bool> AdminResetPasswordAsync(int id, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+        if (user == null) return false;
+
+        user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        await _userRepository.UpdateAsync(user);
+        return true;
+    }
+
 
     public async Task<UserResponseDto?> GetUserByIdAsync(int id)
     {

@@ -16,5 +16,6 @@ public interface IUserService
     Task<bool> ChangePasswordAsync(int id, ChangePasswordDto dto);
     Task ForgotPasswordAsync(string email);
     Task ResetPasswordAsync(ResetPasswordDto dto);
+    Task<bool> AdminResetPasswordAsync(int id, string newPassword);
 
 }
