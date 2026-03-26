@@ -95,7 +95,8 @@ public class UserService : IUserService
             Email = user.Email,
             FirstName = user.Firstname,
             LastName = user.Lastname,
-            Phonenumber = user.Phonenumber
+            Phonenumber = user.Phonenumber,
+            Type = user.Type
         };
     }
     public async Task<IEnumerable<UserResponseDto>> GetAllUsersAsync()
