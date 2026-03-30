@@ -10,7 +10,6 @@ public class UserCreateDto
     public string Password { get; set; } = string.Empty;
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public string FirstName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "El apellido es obligatorio")]
     public string? LastName { get; set; }
     public string? Phonenumber { get; set; }
 }

@@ -25,7 +25,7 @@ public class UserService : IUserService
             Email = userDto.Email,
             Password = BCrypt.Net.BCrypt.HashPassword(userDto.Password),
             Firstname = userDto.FirstName,
-            Lastname = userDto.LastName,
+            Lastname = userDto.LastName ?? string.Empty,
             Phonenumber = userDto.Phonenumber,
             Type = "Client"
         };
