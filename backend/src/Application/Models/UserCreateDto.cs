@@ -11,7 +11,6 @@ public class UserCreateDto
     [Required(ErrorMessage = "El nombre es obligatorio")]
     public string FirstName { get; set; } = string.Empty;
     [Required(ErrorMessage = "El apellido es obligatorio")]
-    public string LastName { get; set; } = string.Empty;
-    [Required(ErrorMessage = "El numero de cliente es obligatorio")]
-    public string Phonenumber { get; set; } = string.Empty;
+    public string? LastName { get; set; }
+    public string? Phonenumber { get; set; }
 }

@@ -42,6 +42,24 @@ public class UserController : ControllerBase
         // Retornamos un 200 OK con la lista
         return Ok(users);
     }
+    [HttpPost("bulk-import")]
+    public async Task<IActionResult> BulkImport([FromBody] List<UserCreateDto> users)
+    {
+        var results = new List<object>();
+        foreach (var user in users)
+        {
+            try
+            {
+                var result = await _userService.RegisterUserAsync(user);
+                results.Add(new { email = result.Email, status = "ok" });
+            }
+            catch (Exception ex)
+            {
+                results.Add(new { email = user.Email, status = "error", message = ex.Message });
+            }
+        }
+        return Ok(results);
+    }
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserCreateDto userDto)
     {
