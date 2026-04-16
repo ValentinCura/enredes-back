@@ -95,7 +95,8 @@ namespace Application.Services
         .Select(pl => new LocalitySimpleDto
         {
             Id = pl.LocalityId,
-            Name = pl.Locality?.Name ?? string.Empty
+            Name = pl.Locality?.Name ?? string.Empty,
+            Status = pl.Locality?.Status ?? true
         }).ToList(),
             CreatedAt = plan.CreatedAt
         };
