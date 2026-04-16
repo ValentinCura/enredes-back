@@ -31,7 +31,7 @@ namespace Web.Controllers
             if (plan == null) return NotFound();
             return Ok(plan);
         }
-        [Authorize(Roles = "Admin")]
+
         [HttpGet("locality/{localityId}")]
         public async Task<IActionResult> GetByLocality(int localityId)
         {
