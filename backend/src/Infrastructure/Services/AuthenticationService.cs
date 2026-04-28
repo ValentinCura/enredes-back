@@ -49,7 +49,8 @@ namespace Infrastructure.Services
     {
         new Claim("sub", user.Id.ToString()),
         new Claim("mail", user.Email),
-        new Claim("role", user.Type)
+        new Claim("role", user.Type),
+        new Claim("WebMail", user.WebMail.ToString().ToLower())
     };
 
             var token = new JwtSecurityToken(

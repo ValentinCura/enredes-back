@@ -17,6 +17,6 @@ namespace Application.Models
         public string Type { get; set; } = "Client";
         public string Phonenumber { get; set; } = string.Empty;
         public bool Status { get; set; } = true;
-
+        public bool WebMail { get; set; } = true;
     }
 }

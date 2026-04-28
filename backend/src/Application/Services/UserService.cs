@@ -114,7 +114,8 @@ public class UserService : IUserService
             LastName = user.Lastname,
             Type = user.Type, // O el valor que tengas en la entidad,
             Phonenumber = user.Phonenumber,
-            Status = user.Status
+            Status = user.Status,
+            WebMail = user.WebMail
         });
     }
     public async Task<UserResponseDto?> UpdateUserAsync(int id, UserUpdateDto dto)
