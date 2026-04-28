@@ -33,5 +33,6 @@ namespace Domain.Entities
         public string? PasswordResetToken { get; set; }
         public DateTime? PasswordResetTokenExpiry { get; set; }
 
+        public bool WebMail{ get; set; } = false;
     }
 }
